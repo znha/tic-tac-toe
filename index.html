@@ -4,51 +4,59 @@
 <head>
   <title>Tic-Tac-Toe from Scratch</title>
   <style>
+    body {
+      text-align: center;
+    }
+
+    #container {
+      margin: auto;
+      width: 300px;
+      height: 500px;
+    }
+
+    #players {
+      width: 200px;
+      margin: auto;
+
+    }
+
+    input[type="text"] {
+      width: 150px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: darkgreen;
+      color: white;
+      width: 70px;
+      font-size: 16px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      border: 0;
+      border-radius: 5px;
+    }
+
     #board {
       display: inline-block;
-      float: left;
-      margin-right: 15px;
     }
 
     td {
-      width: 20px;
-      height: 20px;
+      width: 50px;
+      height: 50px;
     }
 
-    h6 {
+    h6,
+    p {
       margin-top: 5px;
     }
   </style>
 </head>
 
 <body>
-  <div id="board">
-    <table border="1">
-      <tr>
-        <td id='0_0'></td>
-        <td id='0_1'></td>
-        <td id='0_2'></td>
-      </tr>
-      <tr>
-        <td id='1_0'></td>
-        <td id='1_1'></td>
-        <td id='1_2'></td>
-      </tr>
-      <tr>
-        <td id='2_0'></td>
-        <td id='2_1'></td>
-        <td id='2_2'></td>
-      </tr>
-    </table>
-  </div>
-  <div>
-    <button id="reset">Reset</button>
-    <div>
-      <h6>Status</h6>
-      <p id="msg"></p>
-    </div>
-  </div>
+  <div id="container">
 
+  </div>
   <script src="app.js"></script>
 </body>
 
