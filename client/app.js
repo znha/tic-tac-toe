@@ -27,6 +27,7 @@ var myDivs = `<div id="players">
 </div>
 <div>
 <button id="reset">Reset</button>
+<button id="rotate">Rotate</button>
 <div>
   <div id="msg"></div>
   <div id="playerNames"></div>
@@ -62,8 +63,10 @@ var ticTacToe = {
 //var boardDisabled = false;
 var tds = document.getElementsByTagName('td');
 var resetBtn = document.getElementById('reset');
+var rotateBtn = document.getElementById('rotate');
 var savePlayersBtn = document.getElementById('savePlayersBtn');
 var msg = document.getElementById('msg');
+var boardDiv = document.getElementById('board');
 var tallyMsg = document.getElementById('playerResults');
 // var playerX;
 // var playerO;
@@ -114,6 +117,7 @@ var handlers = {
 
       }
     }
+
   },
   checkRows: function (board) {
     for (var i = 0; i < board.length; i++) {
@@ -172,6 +176,13 @@ var handlers = {
 resetBtn.addEventListener('click', function (e) {
   e.preventDefault();
   handlers.reset(ticTacToe.board, tds);
+});
+rotateBtn.addEventListener('click', function (e) {
+  e.preventDefault();
+  boardDiv.style.transform = "rotate(90deg)";
+  for (var i = 0; i < tds.length; i++) {
+    tds[i].style.transform = "rotate(270deg)";
+  }
 });
 savePlayersBtn.addEventListener('click', function (e) {
   e.preventDefault();
