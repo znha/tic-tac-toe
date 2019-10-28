@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Tic-Tac-Toe from Scratch</title>
+  <style>
+    #board {
+      display: inline-block;
+      float: left;
+      margin-right: 15px;
+    }
+
+    td {
+      width: 20px;
+      height: 20px;
+    }
+
+    h6 {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="board">
+    <table border="1">
+      <tr>
+        <td id='0_0'></td>
+        <td id='0_1'></td>
+        <td id='0_2'></td>
+      </tr>
+      <tr>
+        <td id='1_0'></td>
+        <td id='1_1'></td>
+        <td id='1_2'></td>
+      </tr>
+      <tr>
+        <td id='2_0'></td>
+        <td id='2_1'></td>
+        <td id='2_2'></td>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <button id="reset">Reset</button>
+    <div>
+      <h6>Status</h6>
+      <p id="msg"></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
