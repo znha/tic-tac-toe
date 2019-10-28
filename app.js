@@ -67,9 +67,111 @@ var msg = document.getElementById('msg');
 var tallyMsg = document.getElementById('playerResults');
 // var playerX;
 // var playerO;
+var handlers = {
+  clickHandler: function (e) {
+    var context = e.target;
+
+    if (!ticTacToe.boardDisabled && ticTacToe.playerO !== null && ticTacToe.playerX !== null) {
+      if (context.innerHTML === '') {
+        msg.innerHTML = '';
+        var vertecies = context.id.split('_');
+        var x = vertecies[0];
+        var y = vertecies[1];
+        context.innerHTML = ticTacToe.currentPlayer;
+        ticTacToe.board[x][y] = ticTacToe.currentPlayer;
+        // check if its a win or a tie and show the reuslt in msg
+        ticTacToe.boardStatus = handlers.checkRows(ticTacToe.board) || handlers.checkColumns(ticTacToe.board) || handlers.checkDiagonals(ticTacToe.board);
+        if (ticTacToe.boardStatus) {
+          ticTacToe.boardDisabled = true;
+          ticTacToe.winner = ticTacToe.currentPlayer;
+          ticTacToe.tally[ticTacToe.winner]++;
+          msg.style.color = 'green';
+          msg.innerHTML = 'Congrats ! ' + ((ticTacToe.currentPlayer === 'X') ? ticTacToe.playerX : ticTacToe.playerO);
+          tallyMsg.innerHTML = ticTacToe.tally['X'] + "     ----     " + ticTacToe.tally['O'];
+
+        } else {
+          // check if the ticTacToe.board has a tie or the player can continue to play
+
+          // I need to study the tie patterns to check them but now I will assume that its when the ticTacToe.board if full
+          for (var i = 0; i < ticTacToe.board.length; i++) {
+            for (var j = 0; j < ticTacToe.board[i].length; j++) {
+              if (ticTacToe.board[i][j] === 0) {
+                ticTacToe.boardHasTie = ticTacToe.boardHasTie && ticTacToe.board[i][j];
+              }
+            }
+          }
+          if (ticTacToe.boardHasTie) {
+            msg.style.color = 'red';
+            msg.innerHTML = 'You reached a Tie! Reset the game to contiue';
+          }
+          handlers.checkPlayer(ticTacToe.currentPlayer);
+
+        }
+
+      } else {
+        msg.style.color = 'red';
+        msg.innerHTML = 'NOT YOUR TURN';
+
+      }
+    }
+  },
+  checkRows: function (board) {
+    for (var i = 0; i < board.length; i++) {
+      if (board[i][0] === board[i][1] && board[i][0] === board[i][2] && board[i][0] !== 0) {
+        return true;
+      }
+    }
+    return false;
+  },
+  checkColumns: function (board) {
+    for (var i = 0; i < board.length; i++) {
+      if (this.checkColumn(board, i)) {
+        return true;
+      }
+    }
+    return false;
+  },
+  checkColumn: function (board, col) {
+    if (board[0][col] === board[1][col] && board[0][col] === board[2][col] && board[0][col] !== 0) {
+      return true;
+    }
+    return false;
+  },
+  checkDiagonals: function (board) {
+    if (board[0][0] === board[1][1] && board[0][0] === board[2][2] && board[0][0] !== 0) {
+      return true;
+    }
+    if (board[2][0] === board[1][1] && board[2][0] === board[0][2] && board[2][0] !== 0) {
+      return true;
+    }
+    return false;
+  },
+  checkPlayer: function (player) {
+    if (player === 'X') {
+      ticTacToe.currentPlayer = 'O';
+    } else {
+      ticTacToe.currentPlayer = 'X';
+    }
+  },
+  reset: function (board, tds) {
+    // reset theboard array
+    for (var i = 0; i < board.length; i++) {
+      for (var j = 0; j < board[i].length; j++) {
+        board[i][j] = 0;
+      }
+    }
+    for (var i = 0; i < tds.length; i++) {
+      tds[i].innerHTML = '';
+    }
+    msg.innerHTML = '';
+    ticTacToe.currentPlayer = ticTacToe.winner;
+    ticTacToe.boardDisabled = false;
+  }
+}
+
 resetBtn.addEventListener('click', function (e) {
   e.preventDefault();
-  reset(ticTacToe.board, tds);
+  handlers.reset(ticTacToe.board, tds);
 });
 savePlayersBtn.addEventListener('click', function (e) {
   e.preventDefault();
@@ -79,112 +181,6 @@ savePlayersBtn.addEventListener('click', function (e) {
 });
 
 for (var i = 0; i < tds.length; i++) {
-  tds[i].addEventListener('click', clickHandler);
+  tds[i].addEventListener('click', handlers.clickHandler);
 }
 // clickHandler function :handles click events on the ticTacToe.board;
-function clickHandler(e) {
-  var context = e.target;
-  if (!ticTacToe.boardDisabled) {
-    if (context.innerHTML === '') {
-      msg.innerHTML = '';
-      var vertecies = context.id.split('_');
-      var x = vertecies[0];
-      var y = vertecies[1];
-      context.innerHTML = ticTacToe.currentPlayer;
-      ticTacToe.board[x][y] = ticTacToe.currentPlayer;
-      // check if its a win or a tie and show the reuslt in msg
-
-      ticTacToe.boardStatus = checkRows(ticTacToe.board) || checkColumns(ticTacToe.board) || checkDiagonals(ticTacToe.board);
-      if (ticTacToe.boardStatus) {
-        ticTacToe.boardDisabled = true;
-        ticTacToe.winner = ticTacToe.currentPlayer;
-        ticTacToe.tally[ticTacToe.winner]++;
-        msg.style.color = 'green';
-        msg.innerHTML = 'Congrats ! ' + ((ticTacToe.currentPlayer === 'X') ? ticTacToe.playerX : ticTacToe.playerO);
-        tallyMsg.innerHTML = ticTacToe.tally['X'] + "     ----     " + ticTacToe.tally['O'];
-
-      } else {
-        // check if the ticTacToe.board has a tie or the player can continue to play
-
-        // I need to study the tie patterns to check them but now I will assume that its when the ticTacToe.board if full
-        for (var i = 0; i < ticTacToe.board.length; i++) {
-          for (var j = 0; j < ticTacToe.board[i].length; j++) {
-            if (ticTacToe.board[i][j] === 0) {
-              ticTacToe.boardHasTie = ticTacToe.boardHasTie && ticTacToe.board[i][j];
-            }
-          }
-        }
-        if (ticTacToe.boardHasTie) {
-          msg.style.color = 'red';
-          msg.innerHTML = 'You reached a Tie! Reset the game to contiue';
-        }
-        checkPlayer(ticTacToe.currentPlayer);
-
-      }
-
-    } else {
-      msg.style.color = 'red';
-      msg.innerHTML = 'NOT YOUR TURN';
-
-    }
-  }
-}
-// checkRow function  : check if the rows has a win
-
-function checkRows(board) {
-  for (var i = 0; i < board.length; i++) {
-    if (board[i][0] === board[i][1] && board[i][0] === board[i][2] && board[i][0] !== 0) {
-      return true;
-    }
-  }
-  return false;
-}
-// checkColumns function  : check if the columns has a win
-function checkColumns(board) {
-  for (var i = 0; i < board.length; i++) {
-    if (checkColumn(board, i)) {
-      return true;
-    }
-  }
-  return false;
-}
-function checkColumn(board, col) {
-  if (board[0][col] === board[1][col] && board[0][col] === board[2][col] && board[0][col] !== 0) {
-    return true;
-  }
-  return false;
-}
-// checkColumn function  : check if the two diagonals has a win
-function checkDiagonals(board) {
-  if (board[0][0] === board[1][1] && board[0][0] === board[2][2] && board[0][0] !== 0) {
-    return true;
-  }
-  if (board[2][0] === board[1][1] && board[2][0] === board[0][2] && board[2][0] !== 0) {
-    return true;
-  }
-  return false;
-}
-// checkPlayer function  : changes the player on each click
-function checkPlayer(player) {
-  if (player === 'X') {
-    ticTacToe.currentPlayer = 'O';
-  } else {
-    ticTacToe.currentPlayer = 'X';
-  }
-}
-// reset function  : reset theboard
-function reset(board, tds) {
-  // reset theboard array
-  for (var i = 0; i < board.length; i++) {
-    for (var j = 0; j < board[i].length; j++) {
-      board[i][j] = 0;
-    }
-  }
-  for (var i = 0; i < tds.length; i++) {
-    tds[i].innerHTML = '';
-  }
-  msg.innerHTML = '';
-  ticTacToe.currentPlayer = ticTacToe.winner;
-  ticTacToe.boardDisabled = false;
-}
-
